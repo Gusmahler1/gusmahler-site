@@ -1,4 +1,5 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'zod';
 import { glob } from 'astro/loaders';
 
 const issues = defineCollection({
@@ -41,7 +42,7 @@ const projects = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    url: z.string().url().optional(),
+    url: z.url().optional(),
     tags: z.array(z.string()).default([]),
   }),
 });
