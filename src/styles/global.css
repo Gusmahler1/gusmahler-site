@@ -1,1 +1,40 @@
 @import "tailwindcss";
+
+/* ── Brand palette ─────────────────────────────────────────────────────────
+   Equivalent to tailwind.config theme.extend.colors in Tailwind 4.
+   Usage: text-sports, bg-politics, border-financial, etc.
+   ───────────────────────────────────────────────────────────────────────── */
+@theme {
+  --color-sports:    #4a7cdc;
+  --color-politics:  #d4820a;
+  --color-financial: #2ab09a;
+  --color-other:     #8a6fbe;
+
+  /* Neutral grays used throughout */
+  --color-ink:       #1a1a1a;
+  --color-muted:     #888888;
+  --color-border:    #e0e0e0;
+  --color-surface:   #f7f7f7;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────── */
+body {
+  font-family: Georgia, serif;
+  color: var(--color-ink);
+  line-height: 1.75;
+}
+
+a {
+  color: var(--color-ink);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ── Prose container ────────────────────────────────────────────────────── */
+.prose-issue {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
