@@ -1,0 +1,81 @@
+---
+// Non-functional placeholder. Phase 2 will wire this to Resend / subscriber storage.
+---
+
+<div class="subscribe-wrap">
+  <p class="subscribe-label">Get Prediction Markets Weekly in your inbox every Monday.</p>
+  <form class="subscribe-form" action="#" method="post" aria-label="Newsletter signup">
+    <input
+      type="email"
+      name="email"
+      placeholder="you@example.com"
+      required
+      aria-label="Email address"
+      class="subscribe-input"
+    />
+    <button type="submit" class="subscribe-btn">Subscribe</button>
+  </form>
+  <p class="subscribe-note">No spam. Unsubscribe any time.</p>
+</div>
+
+<style>
+  .subscribe-wrap {
+    background: #f7f7f7;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin: 32px 0;
+  }
+
+  .subscribe-label {
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+    font-size: 0.95rem;
+    margin: 0 0 12px;
+    color: #222;
+  }
+
+  .subscribe-form {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .subscribe-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+  }
+
+  .subscribe-input:focus {
+    outline: 2px solid #4a7cdc;
+    border-color: transparent;
+  }
+
+  .subscribe-btn {
+    padding: 8px 18px;
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+  }
+
+  .subscribe-btn:hover {
+    background: #333;
+  }
+
+  .subscribe-note {
+    font-size: 0.75rem;
+    color: #999;
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+    margin: 8px 0 0;
+  }
+</style>
