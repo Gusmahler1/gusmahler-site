@@ -1,0 +1,26 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'essays'>;
+}
+
+const { entry } = Astro.props;
+const { title, date, description } = entry.data;
+
+const displayDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="prose-issue py-10">
+    <h1 class="text-3xl font-serif mb-2 mt-0">{title}</h1>
+    <div class="font-sans text-sm text-[var(--color-muted)] mb-8">{displayDate}</div>
+    <slot />
+  </article>
+</BaseLayout>

@@ -1,0 +1,35 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'issues'>;
+}
+
+const { entry } = Astro.props;
+const { title, date, subject, preview } = entry.data;
+
+const displayDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+
+const pageTitle = subject ?? title;
+const pageDesc  = preview ?? `Prediction Markets Weekly — ${displayDate}`;
+---
+
+<BaseLayout title={pageTitle} description={pageDesc}>
+  <article class="prose-issue py-10">
+    <h1 class="text-3xl font-serif mb-1.5 mt-0">Prediction Markets Weekly</h1>
+    <span
+      class="block font-sans text-[1.05rem] font-medium tracking-[0.04em] border-b-2 border-ink pb-3 mb-1 mt-1.5"
+    >
+      The Regulatory Battle
+    </span>
+    <div class="font-sans text-sm text-[var(--color-muted)] mt-2 mb-8">{displayDate}</div>
+
+    <slot />
+  </article>
+</BaseLayout>

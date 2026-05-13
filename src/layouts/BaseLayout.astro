@@ -1,0 +1,49 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Personal site and newsletter by Gus Mahler.' } = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://gusmahler.com');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalUrl} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body class="bg-white">
+    <header class="border-b border-[var(--color-border)] py-4">
+      <nav class="max-w-[680px] mx-auto px-5 flex items-center justify-between font-sans text-sm">
+        <a href="/" class="font-semibold tracking-tight no-underline hover:no-underline">
+          Gus Mahler
+        </a>
+        <ul class="flex gap-6 list-none m-0 p-0">
+          <li><a href="/newsletter">Newsletter</a></li>
+          <li><a href="/writing">Writing</a></li>
+          <li><a href="/projects">Projects</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="border-t border-[var(--color-border)] mt-20 py-8">
+      <div class="max-w-[680px] mx-auto px-5 font-sans text-sm text-[var(--color-muted)] flex justify-between">
+        <span>© {new Date().getFullYear()} Gus Mahler</span>
+        <a href="/newsletter">Prediction Markets Weekly</a>
+      </div>
+    </footer>
+  </body>
+</html>
