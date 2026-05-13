@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import IssueLayout from '../../layouts/IssueLayout.astro';
+import GlanceList from '../../components/GlanceList.astro';
+import ScorecardTable from '../../components/ScorecardTable.astro';
+import ImplicationBox from '../../components/ImplicationBox.astro';
+
+export async function getStaticPaths() {
+  const issues = await getCollection('issues');
+  return issues.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<IssueLayout entry={entry}>
+  <GlanceList items={entry.data.glance} />
+  <ScorecardTable rows={entry.data.scorecard} />
+  <Content components={{ ImplicationBox }} />
+</IssueLayout>
+
+<style is:global>
+  /* Prose styles scoped to newsletter issue body */
+  .prose-issue h2 {
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #444;
+    margin-top: 40px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 4px;
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+  }
+
+  .prose-issue h3 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+    margin-top: 24px;
+  }
+
+  .prose-issue p {
+    margin: 6px 0;
+  }
+
+  .prose-issue a {
+    color: #1a1a1a;
+  }
+
+  .prose-issue ul:not(.glance-list) {
+    padding-left: 20px;
+  }
+
+  .prose-issue li {
+    margin: 4px 0;
+  }
+</style>
