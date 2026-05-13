@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import IssueLayout from '../../layouts/IssueLayout.astro';
 import GlanceList from '../../components/GlanceList.astro';
 import ScorecardTable from '../../components/ScorecardTable.astro';
@@ -8,13 +8,13 @@ import ImplicationBox from '../../components/ImplicationBox.astro';
 export async function getStaticPaths() {
   const issues = await getCollection('issues');
   return issues.map((entry) => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.id },
     props: { entry },
   }));
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 ---
 
 <IssueLayout entry={entry}>

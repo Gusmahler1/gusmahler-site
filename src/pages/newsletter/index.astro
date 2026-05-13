@@ -31,7 +31,7 @@ const issues = (await getCollection('issues')).sort(
         });
         return (
           <li>
-            <a href={`/newsletter/${issue.slug}`} class="issue-link">
+            <a href={`/newsletter/${issue.id}`} class="issue-link">
               <span class="issue-date font-sans text-sm text-[var(--color-muted)]">{displayDate}</span>
               <span class="issue-title">{issue.data.title}</span>
               {issue.data.preview && (
