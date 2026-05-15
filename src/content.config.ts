@@ -12,6 +12,8 @@ const issues = defineCollection({
     subject: z.string().optional(),
     /** Email preview text (90 chars max) */
     preview: z.string().optional(),
+    /** Short display headline for edition reader and landing */
+    headline: z.string().optional(),
     /** At-a-glance bullet strings — no trailing dates per editorial rules */
     glance: z.array(z.string()).default([]),
     /** Regulatory scorecard rows */
