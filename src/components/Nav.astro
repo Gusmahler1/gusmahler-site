@@ -1,0 +1,33 @@
+---
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+
+const navItems = [
+  { label: 'Newsletter', href: '/newsletter' },
+  { label: 'Writing', href: '/writing' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'About', href: '/about' },
+];
+---
+
+<header class="site-head">
+  <div class="site-head__inner">
+    <a class="site-head__logo u-unstyled" href="/" aria-label="Home">
+      <span class="site-head__monogram">GM</span>
+      <span class="site-head__wordmark">Gus Mahler</span>
+    </a>
+    <nav class="site-head__nav">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class={`site-head__link${currentPath.startsWith(item.href) ? ' is-active' : ''}`}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
