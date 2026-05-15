@@ -1,37 +1,9 @@
 ---
 // ImplicationBox wraps inline MDX content.
-// Usage in MDX:
-//   <ImplicationBox label="Industry implication:">
-//   - Bullet one
-//   - Bullet two
-//   </ImplicationBox>
+// Usage in MDX: <ImplicationBox>...</ImplicationBox>
 ---
 
-<div class="implication">
+<div class="ed__imp">
+  <div class="ed__imp-lbl">Industry Implication</div>
   <slot />
 </div>
-
-<style>
-  .implication {
-    background: #f0f4ff;
-    border-left: 3px solid #4a7cdc;
-    padding: 8px 12px;
-    margin-top: 8px;
-    font-size: 0.88rem;
-    color: #333;
-  }
-
-  .implication :global(p:first-child),
-  .implication :global(strong:first-child) {
-    margin-top: 0;
-  }
-
-  .implication :global(ul) {
-    margin: 4px 0;
-    padding-left: 18px;
-  }
-
-  .implication :global(li) {
-    margin: 3px 0;
-  }
-</style>

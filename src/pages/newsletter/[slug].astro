@@ -1,61 +1,72 @@
 ---
 import { getCollection, render } from 'astro:content';
-import IssueLayout from '../../layouts/IssueLayout.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import GlanceList from '../../components/GlanceList.astro';
 import ScorecardTable from '../../components/ScorecardTable.astro';
 import ImplicationBox from '../../components/ImplicationBox.astro';
 
 export async function getStaticPaths() {
   const issues = await getCollection('issues');
+  const sorted = [...issues].sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+  const numberMap = new Map(sorted.map((issue, idx) => [issue.id, idx + 1]));
   return issues.map((entry) => ({
     params: { slug: entry.id },
-    props: { entry },
+    props: { entry, issueNumber: numberMap.get(entry.id) ?? 1 },
   }));
 }
 
-const { entry } = Astro.props;
+const { entry, issueNumber } = Astro.props;
 const { Content } = await render(entry);
+
+const displayDate = entry.data.date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
 ---
 
-<IssueLayout entry={entry}>
-  <GlanceList items={entry.data.glance} />
-  <ScorecardTable rows={entry.data.scorecard} />
-  <Content components={{ ImplicationBox }} />
-</IssueLayout>
+<BaseLayout
+  title={entry.data.subject ?? entry.data.title}
+  description={entry.data.preview ?? `Prediction Markets Weekly — ${displayDate}`}
+>
+  <article class="ed">
 
-<style is:global>
-  /* Prose styles scoped to newsletter issue body */
-  .prose-issue h2 {
-    font-size: 1.05rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #444;
-    margin-top: 40px;
-    margin-bottom: 12px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 4px;
-    font-family: -apple-system, 'Helvetica Neue', sans-serif;
-  }
+    <div class="essay__back-wrap">
+      <a class="back" href="/newsletter">← All editions</a>
+    </div>
 
-  .prose-issue h3 {
-    font-size: 1rem;
-    margin-bottom: 4px;
-    margin-top: 24px;
-  }
+    <hr class="rule-hard" />
 
-  .prose-issue p {
-    margin: 6px 0;
-  }
+    <div class="ed__kicker">Issue {String(issueNumber).padStart(2, '0')} · {displayDate} · By Gus Mahler</div>
+    <h1 class="ed__hl">{entry.data.headline ?? entry.data.title}</h1>
+    {entry.data.preview && <p class="ed__deck">{entry.data.preview}</p>}
 
-  .prose-issue a {
-    color: #1a1a1a;
-  }
+    <hr class="rule" />
 
-  .prose-issue ul:not(.glance-list) {
-    padding-left: 20px;
-  }
+    {entry.data.glance.length > 0 && (
+      <section class="ed__section">
+        <div class="ribbon">This Week at a Glance</div>
+        <hr class="rule" />
+        <GlanceList items={entry.data.glance} />
+      </section>
+    )}
 
-  .prose-issue li {
-    margin: 4px 0;
-  }
-</style>
+    {entry.data.scorecard.length > 0 && (
+      <section class="ed__section">
+        <div class="ribbon">Regulatory Scorecard</div>
+        <hr class="rule" />
+        <ScorecardTable rows={entry.data.scorecard} />
+      </section>
+    )}
+
+    <Content components={{ ImplicationBox }} />
+
+    <hr class="rule-hard" style="margin-top: 40px;" />
+    <div class="ed__end">
+      <span class="pill">End of edition</span>
+      <span class="ed__end-meta">· Gus</span>
+    </div>
+
+  </article>
+</BaseLayout>
