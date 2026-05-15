@@ -1,170 +1,93 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SubscribeForm from '../components/SubscribeForm.astro';
 
-const issues = (await getCollection('issues')).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
-const latestIssue = issues[0];
-
-const latestDate = latestIssue?.data.date.toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-  timeZone: 'UTC',
-});
+const allIssues = await getCollection('issues');
+const recentIssues = allIssues
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 2);
 ---
 
 <BaseLayout
   title="Gus Mahler"
-  description="Personal site of Gus Mahler — publisher of Prediction Markets Weekly and writer on markets, regulation, and technology."
+  description="Personal site of Gus Mahler — writer on prediction markets, regulation, and political theory."
 >
-  <div class="prose-issue py-12">
+  <div class="home-port">
+    <div class="home-port__grid">
 
-    <!-- Bio -->
-    <section class="bio">
-      <h1 class="bio-name">Gus Mahler</h1>
-      <p class="bio-tagline">
-        I publish <a href="/newsletter"><strong>Prediction Markets Weekly</strong></a>, a briefing on
-        the regulatory battle over U.S. prediction markets. I write about markets, regulation, and
-        the systems underneath them.
-      </p>
-    </section>
-
-    <!-- Latest issue -->
-    {latestIssue && (
-      <section class="latest-section">
-        <h2 class="section-label">Latest Issue</h2>
-        <div class="issue-card">
-          <div class="issue-card-meta font-sans text-sm text-[var(--color-muted)]">{latestDate}</div>
-          <a href={`/newsletter/${latestIssue.id}`} class="issue-card-title">
-            {latestIssue.data.title}
-          </a>
-          {latestIssue.data.preview && (
-            <p class="issue-card-preview font-sans text-sm text-[var(--color-muted)]">
-              {latestIssue.data.preview}
-            </p>
-          )}
-          <a href={`/newsletter/${latestIssue.id}`} class="issue-card-link font-sans text-sm">
-            Read issue →
-          </a>
+      <aside class="home-port__bio">
+        <div class="home-port__monogram">GM</div>
+        <h1 class="home-port__name">Gus Mahler</h1>
+        <p class="home-port__lead">I write essays on political theory and a weekly newsletter on the regulatory fight over prediction markets. On the side I run regressions on whatever I'm curious about and post the results.</p>
+        <p class="home-port__lead">Based in New York. The site is a place to keep the work in one place.</p>
+        <div class="home-port__nav">
+          <a href="/newsletter">Read the newsletter →</a>
+          <a href="/writing">Read the writing →</a>
+          <a href="/projects">Browse the projects →</a>
+          <a href="/about">About →</a>
         </div>
-      </section>
-    )}
+      </aside>
 
-    <!-- Subscribe -->
-    <section>
-      <h2 class="section-label">Subscribe</h2>
-      <SubscribeForm />
-    </section>
+      <div class="home-port__work">
 
-    <!-- Quick nav -->
-    <section class="quick-nav">
-      <h2 class="section-label">More</h2>
-      <ul class="nav-list">
-        <li><a href="/newsletter">Newsletter archive</a> — every issue since February 2026</li>
-        <li><a href="/writing">Writing</a> — essays and longer pieces <span class="coming-soon">coming soon</span></li>
-        <li><a href="/projects">Projects</a> — things I've built <span class="coming-soon">coming soon</span></li>
-        <li><a href="/about">About</a></li>
-      </ul>
-    </section>
+        <!-- Newsletter -->
+        <section class="home-port__group">
+          <header class="home-port__group-head">
+            <div class="ribbon">Newsletter</div>
+            <a class="home-port__group-see" href="/newsletter">All →</a>
+          </header>
+          <ul class="home-port__list">
+            {recentIssues.map((issue) => {
+              const kicker = issue.data.date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                timeZone: 'UTC',
+              });
+              return (
+                <li class="home-port__row">
+                  <a class="home-port__link" href={`/newsletter/${issue.id}`}>
+                    <div class="kicker">{kicker}</div>
+                    <h3 class="home-port__title">{issue.data.title}</h3>
+                    {issue.data.preview && <p class="home-port__deck">{issue.data.preview}</p>}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
 
+        <!-- Writing -->
+        <section class="home-port__group">
+          <header class="home-port__group-head">
+            <div class="ribbon">Writing</div>
+            <a class="home-port__group-see" href="/writing">All →</a>
+          </header>
+          <ul class="home-port__list">
+            <li class="home-port__row">
+              <div class="home-port__link">
+                <p class="home-port__deck">Essays and long-form pieces coming soon.</p>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <!-- Projects -->
+        <section class="home-port__group">
+          <header class="home-port__group-head">
+            <div class="ribbon">Projects</div>
+            <a class="home-port__group-see" href="/projects">All →</a>
+          </header>
+          <ul class="home-port__list">
+            <li class="home-port__row">
+              <div class="home-port__link">
+                <p class="home-port__deck">Side projects coming soon.</p>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+      </div>
+    </div>
   </div>
 </BaseLayout>
-
-<style>
-  .bio {
-    margin-bottom: 48px;
-  }
-
-  .bio-name {
-    font-size: 2rem;
-    margin: 0 0 12px;
-  }
-
-  .bio-tagline {
-    font-size: 1.05rem;
-    line-height: 1.7;
-    margin: 0;
-    max-width: 560px;
-  }
-
-  .section-label {
-    font-family: -apple-system, 'Helvetica Neue', sans-serif;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: #888;
-    margin: 0 0 12px;
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 4px;
-  }
-
-  .latest-section {
-    margin-bottom: 48px;
-  }
-
-  .issue-card {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 16px 20px;
-    background: #f7f7f7;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-
-  .issue-card-title {
-    font-size: 1.05rem;
-    font-weight: bold;
-    color: #1a1a1a;
-    text-decoration: none;
-  }
-
-  .issue-card-title:hover {
-    text-decoration: underline;
-  }
-
-  .issue-card-preview {
-    margin: 0;
-  }
-
-  .issue-card-link {
-    margin-top: 4px;
-    font-weight: 600;
-    color: #4a7cdc;
-    text-decoration: none;
-  }
-
-  .issue-card-link:hover {
-    text-decoration: underline;
-  }
-
-  .quick-nav {
-    margin-top: 48px;
-  }
-
-  .nav-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    font-size: 0.95rem;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .coming-soon {
-    font-family: -apple-system, 'Helvetica Neue', sans-serif;
-    font-size: 0.72rem;
-    background: #f0f0f0;
-    color: #888;
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    margin-left: 4px;
-  }
-</style>
