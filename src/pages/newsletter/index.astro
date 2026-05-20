@@ -3,15 +3,12 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const allIssues = await getCollection('issues');
-
-// Sort ascending to assign issue numbers (oldest = issue 01)
-const issuesByDateAsc = [...allIssues].sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
-const issueNumberMap = new Map(issuesByDateAsc.map((issue, idx) => [issue.id, idx + 1]));
-
-// Sort descending for display (latest first)
-const issues = [...allIssues].sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const issues = [...allIssues].sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
 const latest = issues[0];
-const latestNum = latest ? (issueNumberMap.get(latest.id) ?? 1) : 1;
+const featuredIssues = issues.slice(0, 3);
+const remainingIssues = issues.slice(3);
 ---
 
 <BaseLayout
@@ -22,18 +19,17 @@ const latestNum = latest ? (issueNumberMap.get(latest.id) ?? 1) : 1;
 
     <header>
       <div class="kicker-bold">Prediction Markets Weekly · By Gus Mahler · Since February 2026</div>
-      <h1 class="nl__hl">The Regulatory Battle.</h1>
-      <p class="nl__deck">A weekly newsletter covering CFTC rulemaking, congressional activity, state enforcement, and company news in the prediction markets industry. One edition every Monday. Free.</p>
-      <div class="nl__sub">
-        <p class="nl__ok">Subscribe. Email pipeline coming in Phase 2.</p>
-      </div>
+      <h1 class="nl__hl">The Regulatory Fight.</h1>
+      <nav class="nl__subnav" aria-label="Newsletter sections">
+        <a class="nl__subnav-link" href="#latest">Latest</a>
+        <a class="nl__subnav-link" href="#archive">Archive</a>
+        <a class="nl__subnav-link" href="#about">About</a>
+      </nav>
     </header>
 
-    <hr class="rule-hard" />
-
     {latest && (
-      <section class="nl__current">
-        <div class="ribbon">Latest Edition · Issue {String(latestNum).padStart(2, '0')}</div>
+      <section id="latest" class="nl__current">
+        <div class="ribbon">Latest Edition</div>
         <hr class="rule" />
         <div class="nl__current-grid">
           <div>
@@ -47,16 +43,13 @@ const latestNum = latest ? (issueNumberMap.get(latest.id) ?? 1) : 1;
             </div>
             <h2 class="nl__current-hl">{latest.data.headline ?? latest.data.title}</h2>
             {latest.data.preview && <p class="nl__current-deck">{latest.data.preview}</p>}
-            <a class="btn" href={`/newsletter/${latest.id}`}>Read Issue {String(latestNum).padStart(2, '0')} →</a>
+            <a class="btn" href={`/newsletter/${latest.id}`}>Read →</a>
           </div>
           <aside class="nl__glance">
             <div class="kicker-bold">This Week at a Glance</div>
             <ul>
-              {latest.data.glance.map((item, i) => (
-                <li>
-                  <span class="nl__glance-num">{String(i + 1).padStart(2, '0')}</span>
-                  <span>{item.split('.')[0]}.</span>
-                </li>
+              {latest.data.glance.map((item) => (
+                <li>{item}</li>
               ))}
             </ul>
           </aside>
@@ -64,12 +57,11 @@ const latestNum = latest ? (issueNumberMap.get(latest.id) ?? 1) : 1;
       </section>
     )}
 
-    <section class="nl__archive">
+    <section id="archive" class="nl__archive">
       <div class="ribbon">The Archive</div>
       <hr class="rule-hard" />
       <ol class="nl__list">
-        {issues.map((issue) => {
-          const num = issueNumberMap.get(issue.id) ?? 1;
+        {featuredIssues.map((issue) => {
           const displayDate = issue.data.date.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
@@ -79,7 +71,6 @@ const latestNum = latest ? (issueNumberMap.get(latest.id) ?? 1) : 1;
           return (
             <li class="nl__row">
               <a class="nl__link" href={`/newsletter/${issue.id}`}>
-                <div class="nl__num">{String(num).padStart(2, '0')}</div>
                 <div>
                   <div class="kicker">{displayDate}</div>
                   <h3 class="nl__title">{issue.data.headline ?? issue.data.title}</h3>
@@ -91,7 +82,67 @@ const latestNum = latest ? (issueNumberMap.get(latest.id) ?? 1) : 1;
           );
         })}
       </ol>
+      {remainingIssues.length > 0 && (
+        <>
+          <ol class="nl__list nl__list--more" id="archive-more" aria-hidden="true">
+            {remainingIssues.map((issue) => {
+              const displayDate = issue.data.date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                timeZone: 'UTC',
+              });
+              return (
+                <li class="nl__row">
+                  <a class="nl__link" href={`/newsletter/${issue.id}`}>
+                    <div>
+                      <div class="kicker">{displayDate}</div>
+                      <h3 class="nl__title">{issue.data.headline ?? issue.data.title}</h3>
+                      {issue.data.preview && <p class="nl__row-deck">{issue.data.preview}</p>}
+                    </div>
+                    <div class="nl__read">Read →</div>
+                  </a>
+                </li>
+              );
+            })}
+          </ol>
+          <button class="nl__archive-toggle" id="archive-toggle" data-count={remainingIssues.length}>
+            Read more ({remainingIssues.length} more editions) ↓
+          </button>
+        </>
+      )}
+    </section>
+
+    <section id="about" class="nl__about">
+      <div class="ribbon">About This Newsletter</div>
+      <hr class="rule" />
+      <div class="nl__origin">
+        <p class="nl__origin-p">I've always loved to compete. I was a serious soccer player growing up, but off the field I scratched my competitive itch through other — often less dignified — means, invariably tied to money. Clash Royale with friends, poker with anyone who'd sit down. When New York legalized sports betting in January 2022, I was a high school senior and close to the first in line. The stakes were low, but that wasn't the point.</p>
+        <p class="nl__origin-p">In college, I got deep into politics. The game theory I had long encountered in poker was on display at geopolitical scale, and I found it fascinating. Then prediction markets crossed my radar, fusing two interests that had defined different chapters of my life into a single industry still finding its footing.</p>
+        <p class="nl__origin-p">The space has since exploded: monthly trading volumes now exceed $20B — more than what prediction markets saw in all of 2024. But fast growth and legitimacy aren't the same thing. Prediction market companies are fighting for their survival in one of the messier regulatory environments in recent memory: criminal charges, competing legislative frameworks, state injunctions, and a federal agency rewriting its rules in real time.</p>
+        <p class="nl__origin-p">This newsletter covers that fight.</p>
+        <p class="nl__origin-sig">— Gus Mahler</p>
+      </div>
+      <div class="nl__sub">
+        <p class="nl__ok">Email subscription coming soon.</p>
+      </div>
     </section>
 
   </article>
 </BaseLayout>
+
+<script>
+  const toggle = document.getElementById('archive-toggle') as HTMLButtonElement | null;
+  const more   = document.getElementById('archive-more');
+  if (toggle && more) {
+    const count = toggle.dataset.count ?? '';
+    toggle.addEventListener('click', () => {
+      const expanded = more.getAttribute('aria-hidden') === 'false';
+      more.setAttribute('aria-hidden', expanded ? 'true' : 'false');
+      more.classList.toggle('nl__list--open', !expanded);
+      toggle.textContent = expanded
+        ? `Read more (${count} more editions) ↓`
+        : 'Show less ↑';
+    });
+  }
+</script>

@@ -1,93 +1,38 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-const allIssues = await getCollection('issues');
-const recentIssues = allIssues
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 2);
 ---
 
 <BaseLayout
   title="Gus Mahler"
-  description="Personal site of Gus Mahler — writer on prediction markets, regulation, and political theory."
+  description="Personal site of Gus Mahler. Writing on prediction markets, regulation, and political theory."
 >
-  <div class="home-port">
-    <div class="home-port__grid">
+  <main class="about">
+    <div class="about__inner">
 
-      <aside class="home-port__bio">
-        <div class="home-port__monogram">GM</div>
-        <h1 class="home-port__name">Gus Mahler</h1>
-        <p class="home-port__lead">I write essays on political theory and a weekly newsletter on the regulatory fight over prediction markets. On the side I run regressions on whatever I'm curious about and post the results.</p>
-        <p class="home-port__lead">Based in New York. The site is a place to keep the work in one place.</p>
-        <div class="home-port__nav">
-          <a href="/newsletter">Read the newsletter →</a>
-          <a href="/writing">Read the writing →</a>
-          <a href="/projects">Browse the projects →</a>
-          <a href="/about">About →</a>
+      <figure class="about__photo">
+        <img src="/family.jpg" alt="Me, my parents, and my sister at graduation" width="593" height="600" />
+        <figcaption>Me, my parents, and my sister.</figcaption>
+      </figure>
+
+      <div class="about__text">
+        <h1>Who I am &amp; What This Is</h1>
+        <div class="about__cols">
+          <div class="about__col">
+            <p>My name is Gus Mahler, and I recently graduated from Claremont McKenna College with a degree in economics and government. Midway through my senior year, I came to the not-so-novel realization that I should probably get smart on AI if I wanted to find a job. Some months later, I still have no job, but I am smarter on AI, and I'm now using agents to explore the topics and questions I'm interested in.</p>
+            <p>I write a weekly newsletter covering the chaotic regulatory landscape facing prediction market companies like Polymarket and Kalshi, and I use multi-agent workflows to automate the sourcing and synthesis stages of the research process.</p>
+          </div>
+          <div class="about__col">
+            <p>I also use AI agents for data collection and cleaning to support analytical research on topics ranging from politics to music.</p>
+            <p>I initially began incorporating AI into my daily life and workflows to increase the speed at which I do things, but I now realize that agentic tools have the potential to do much more than that. When used thoughtfully and strategically, tools like Claude Code (my go-to) can dramatically expand both the quality and scope of work.</p>
+            <p>Using AI for research still carries a certain taboo, but why should it? I see intentional — and, most importantly, transparent — use of AI as the future, and I'm hoping to show what that can look like here through thoughtful, verifiable, and high-quality work.</p>
+          </div>
         </div>
-      </aside>
-
-      <div class="home-port__work">
-
-        <!-- Newsletter -->
-        <section class="home-port__group">
-          <header class="home-port__group-head">
-            <div class="ribbon">Newsletter</div>
-            <a class="home-port__group-see" href="/newsletter">All →</a>
-          </header>
-          <ul class="home-port__list">
-            {recentIssues.map((issue) => {
-              const kicker = issue.data.date.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                timeZone: 'UTC',
-              });
-              return (
-                <li class="home-port__row">
-                  <a class="home-port__link" href={`/newsletter/${issue.id}`}>
-                    <div class="kicker">{kicker}</div>
-                    <h3 class="home-port__title">{issue.data.title}</h3>
-                    {issue.data.preview && <p class="home-port__deck">{issue.data.preview}</p>}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-
-        <!-- Writing -->
-        <section class="home-port__group">
-          <header class="home-port__group-head">
-            <div class="ribbon">Writing</div>
-            <a class="home-port__group-see" href="/writing">All →</a>
-          </header>
-          <ul class="home-port__list">
-            <li class="home-port__row">
-              <div class="home-port__link">
-                <p class="home-port__deck">Essays and long-form pieces coming soon.</p>
-              </div>
-            </li>
-          </ul>
-        </section>
-
-        <!-- Projects -->
-        <section class="home-port__group">
-          <header class="home-port__group-head">
-            <div class="ribbon">Projects</div>
-            <a class="home-port__group-see" href="/projects">All →</a>
-          </header>
-          <ul class="home-port__list">
-            <li class="home-port__row">
-              <div class="home-port__link">
-                <p class="home-port__deck">Side projects coming soon.</p>
-              </div>
-            </li>
-          </ul>
-        </section>
-
+        <div class="about__foot">
+          <a href="/newsletter">Read the newsletter →</a>
+          <a href="/thoughts-and-research">Browse thoughts and research →</a>
+        </div>
       </div>
+
     </div>
-  </div>
+  </main>
 </BaseLayout>

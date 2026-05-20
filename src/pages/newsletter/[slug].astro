@@ -7,15 +7,13 @@ import ImplicationBox from '../../components/ImplicationBox.astro';
 
 export async function getStaticPaths() {
   const issues = await getCollection('issues');
-  const sorted = [...issues].sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
-  const numberMap = new Map(sorted.map((issue, idx) => [issue.id, idx + 1]));
   return issues.map((entry) => ({
     params: { slug: entry.id },
-    props: { entry, issueNumber: numberMap.get(entry.id) ?? 1 },
+    props: { entry },
   }));
 }
 
-const { entry, issueNumber } = Astro.props;
+const { entry } = Astro.props;
 const { Content } = await render(entry);
 
 const displayDate = entry.data.date.toLocaleDateString('en-US', {
@@ -38,7 +36,7 @@ const displayDate = entry.data.date.toLocaleDateString('en-US', {
 
     <hr class="rule-hard" />
 
-    <div class="ed__kicker">Issue {String(issueNumber).padStart(2, '0')} · {displayDate} · By Gus Mahler</div>
+    <div class="ed__kicker">{displayDate} · By Gus Mahler</div>
     <h1 class="ed__hl">{entry.data.headline ?? entry.data.title}</h1>
     {entry.data.preview && <p class="ed__deck">{entry.data.preview}</p>}
 

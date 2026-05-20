@@ -1,9 +1,16 @@
 ---
-// ImplicationBox wraps inline MDX content.
-// Usage in MDX: <ImplicationBox>...</ImplicationBox>
+interface Props {
+  items?: string[];
+}
+
+const { items = [] } = Astro.props;
 ---
 
-<div class="ed__imp">
-  <div class="ed__imp-lbl">Industry Implication</div>
-  <slot />
-</div>
+{items.length > 0 && (
+  <div class="ed__imp">
+    <div class="ed__imp-lbl">Industry Implication</div>
+    <ul class="ed__imp-list">
+      {items.map((item) => <li>{item}</li>)}
+    </ul>
+  </div>
+)}

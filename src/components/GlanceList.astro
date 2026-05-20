@@ -8,9 +8,8 @@ const { items } = Astro.props;
 
 {items.length > 0 && (
   <ul class="glance">
-    {items.map((item, i) => (
+    {items.map((item) => (
       <li class="glance__item">
-        <span class="glance__num">{String(i + 1).padStart(2, '0')}</span>
         <span class="glance__text">{item}</span>
       </li>
     ))}

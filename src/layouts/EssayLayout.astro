@@ -17,10 +17,66 @@ const displayDate = date.toLocaleDateString('en-US', {
 });
 ---
 
-<BaseLayout title={title} description={description}>
-  <article class="prose-issue py-10">
-    <h1 class="text-3xl font-serif mb-2 mt-0">{title}</h1>
-    <div class="font-sans text-sm text-[var(--color-muted)] mb-8">{displayDate}</div>
-    <slot />
+<BaseLayout title={`${title} · Gus Mahler`} description={description}>
+  <article class="essay">
+    <div class="essay__back-wrap">
+      <a href="/thoughts-and-research" class="back">← Thoughts &amp; Research</a>
+    </div>
+    <div class="essay__kicker">
+      <span class="kicker-bold">Essay</span>
+    </div>
+    <h1 class="essay__hl">{title}</h1>
+    {description && <p class="essay__deck">{description}</p>}
+    <hr class="rule" />
+    <div class="essay__body essay-prose">
+      <slot />
+    </div>
+    <div class="essay__foot">
+      <span class="essay__sig">— Gus Mahler</span>
+      <span class="kicker" style="color: var(--caption-gray);">{displayDate}</span>
+    </div>
   </article>
 </BaseLayout>
+
+<style>
+  .essay-prose :global(p) {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    line-height: 1.62;
+    color: #1a1a1a;
+    margin: 0 0 20px;
+  }
+
+  .essay-prose :global(h2) {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(22px, 2.6vw, 30px);
+    line-height: 1.15;
+    letter-spacing: -0.3px;
+    color: #1a1a1a;
+    margin: 48px 0 18px;
+    padding-top: 24px;
+    border-top: 1px solid #000;
+  }
+
+  .essay-prose :global(h3) {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.3;
+    color: #1a1a1a;
+    margin: 32px 0 10px;
+  }
+
+  .essay-prose :global(blockquote) {
+    border-left: 2px solid #000;
+    margin: 24px 0;
+    padding: 4px 0 4px 20px;
+    font-style: italic;
+    color: #1a1a1a;
+  }
+
+  .essay-prose :global(a) {
+    color: var(--link-blue);
+  }
+</style>
